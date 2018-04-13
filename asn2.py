@@ -4,9 +4,9 @@ _author_ = 'arizza santos'
 # Assignment 2: Dynamic Programming and Greedy Algorithms
 
 import random
-#import time
 import timeit
 import itertools
+import sys
 
 # purpose: generate random integers
 # input: n - number of objects(integers)
@@ -40,8 +40,9 @@ def generate_prob_instance(start, n, step):
     objects = generate_ints(start, n, step)
     weights = generate_rand_ints(n)
     values = generate_rand_ints(n)
+
     start = timeit.default_timer()
-    #start = time.time()
+
     for i in range(n/step):
         obj.append(objects[i])
         obj.append(weights[i])
@@ -50,7 +51,6 @@ def generate_prob_instance(start, n, step):
         print obj
         obj = []
     elapsed = timeit.default_timer() - start
-    #end = time.time()
     print(elapsed)
 
     # double check problem instance
@@ -73,13 +73,18 @@ def max_weight(prob_instance):
     print max_weight
 
 def main():
-    print("Generating random numbers")
-    start = 1
-    n = 10
-    step = 1
-    list_ints = generate_ints(start, n, step)
-    print(list_ints)
-    problem = generate_prob_instance(start, n, step)
-    max_weight(problem)
+    if len(sys.argv) != 4:
+        print "Please type: python asn2.py <start> <n> <step>"
+    else:
+        start = int(sys.argv[1])
+        n = int(sys.argv[2])
+        step = int(sys.argv[3])
+        print 'Params=', start, n, step
+
+        print("Generating random numbers")
+        list_ints = generate_ints(start, n, step)
+        print(list_ints)
+        problem = generate_prob_instance(start, n, step)
+        max_weight(problem)
 
 main()
