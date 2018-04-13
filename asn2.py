@@ -28,12 +28,12 @@ def generate_ints(start, n, step):
         ints.append(i)
     return ints
 
-# purpose: generate a random problem instance
+# purpose: generate one random problem instance
 # input: start - starting integer
 #        n - number of objects
 #        step - increment between each integer
 # return: list of objects with their weights and values
-def generate_prob_instance(start, n, step):
+def generate_one_instance(start, n, step):
     prob_instance = []
     obj = []
 
@@ -41,19 +41,15 @@ def generate_prob_instance(start, n, step):
     weights = generate_rand_ints(n)
     values = generate_rand_ints(n)
 
-    print("Object\tWeight\tValue")
-
-    start = timeit.default_timer()
+    #print("Object\tWeight\tValue")
 
     for i in range(n/step):
         obj.append(objects[i])
         obj.append(weights[i])
         obj.append(values[i])
         prob_instance.append(obj)
-        print obj[0],"\t",obj[1],"\t",obj[2]
+        #print obj[0],"\t",obj[1],"\t",obj[2]
         obj = []
-    elapsed = (timeit.default_timer() - start) * 1000
-    print "Time elapsed: ", elapsed
 
     # double check problem instance
     #for i, w, v in itertools.izip(objects, weights, values):
@@ -67,13 +63,16 @@ def max_weight(prob_instance):
     max_weight = 0    
 
     for obj in prob_instance:
-        #for data in obj:
         max_weight += obj[1]
 
-    print "Total Weight: ", max_weight
+    #print "Total Weight: ", max_weight
     max_weight = int(round(max_weight * 0.75)) # 75% and round
     return max_weight
 
+# purpose: make a list from a given problem instance
+# input: prob_instance - list of objects with their weights and values
+#        choice: 0 - objects, 1 - weights, 2 - values
+# return: a list made from the given choice
 def make_list(prob_instance, choice):
     l = []
     for obj in prob_instance:
@@ -81,9 +80,9 @@ def make_list(prob_instance, choice):
     return l
 
 # purpose: brute force implementation of 0-1 Knapsack Problem
-# input:
-#
-#
+# input: prob_instance - list of objects with their weights and values
+#        max_w - maximum weight of the prob_instance
+#        n - number of objects
 # return:
 def brute_force(prob_instance, max_w, n):
     w = make_list(prob_instance, 1)
@@ -101,27 +100,35 @@ def brute_force(prob_instance, max_w, n):
 def main():
     if len(sys.argv) != 5:
         print "Please type: python asn2.py <start> <n> <step> <algorithm>"
-        print "Choices of algorithm: brute -> {}, greedy -> {}, dynamic" \
-              "programming -> {}".format('b','g','d')
+        print "Choices of algorithm: {} - brute force, {} - greedy, " \
+              "{} - dynamic programming".format('b','g','d')
     else:
         start = int(sys.argv[1])
         n = int(sys.argv[2])
         step = int(sys.argv[3])
         choice = sys.argv[4]
-        print "Start = {} | n = {} | Step = {}".format(start, n, step)
+        print "Start = {} | n = {} | Step = {}\n".format(start, n, step)
 
-        problem = generate_prob_instance(start, n, step)
-        max_w = max_weight(problem)
-        print "Maximum Weight of Knapsack: ", max_w
-        
-        if choice == 'b':
-            print "brute"
-        elif choice == 'g':
-            print "greedy"
-        elif choice == 'd':
-            print "dynamic programming"
-        else:
-            print "Invalid algorithm choice!" 
+        print "n\tMax Weight\tSolution\tTime(ms)"
+        for i in range(start, n+1, step):
+
+            if choice == 'b':
+                one = generate_one_instance(start, i, step)
+                max_w = max_weight(one)
+                
+                start_time = timeit.default_timer()
+                solution = brute_force(one, max_w, i)
+                elapsed = int((timeit.default_timer() - start_time) * 1000)
+                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
+
+            elif choice == 'g':
+                print "greedy"
+
+            elif choice == 'd':
+                print "dynamic programming"
+
+            else:
+                print "Invalid algorithm choice!" 
 
         #start = timeit.default_timer()
         #print "Solution: ", knapsack(problem, max_w, n)
