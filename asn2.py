@@ -15,7 +15,7 @@ def generate_rand_ints(n):
         rand_ints.append(random.randint(1, n))
     return rand_ints
 
-# purpose: generate list of integers [1,n]
+# purpose: generate list of integers [start,n]
 # input: start - starting integer
 #        n - number of objects(integers)
 #        step - increment between each integer
@@ -27,6 +27,23 @@ def generate_ints(start, n, step):
     return ints
 
 def generate_prob_instance(start, n, step):
+    prob_instance = []
+    obj = []
+
+    objects = generate_ints(start, n, step)
+    weights = generate_rand_ints(n)
+    values = generate_rand_ints(n)
+
+    for i in range(n/step):
+        obj.append(objects[i])
+        obj.append(weights[i])
+        obj.append(values[i])
+        prob_instance.append(obj)
+        print obj
+        obj = []
+    print prob_instance
+
+def check_prob_instance(start, n, step):
     objects = generate_ints(start, n, step)
     weights = generate_rand_ints(n)
     values = generate_rand_ints(n)
@@ -34,23 +51,11 @@ def generate_prob_instance(start, n, step):
     for i, w, v in itertools.izip(objects, weights, values):
         print("Object {}: {} {}".format(i, w, v))
 
-    ## create a list of problem instances
-    objs_list = []
-    objs = []
-    print objects
-    for j in range(n/step):
-        objs.append(objects[j])
-        objs.append(weights[j])
-        objs.append(values[j])
-        objs_list.append(objs)
-        print objs
-        objs = []
-    print objs_list
-
 def main():
     print("Generating random numbers")
     list_ints = generate_ints(25, 100, 25)
     print(list_ints)
     generate_prob_instance(25, 100, 25)
+    check_prob_instance(25, 100, 25)
 
 main()
