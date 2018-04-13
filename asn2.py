@@ -95,6 +95,27 @@ def brute_force(max_w, n, w, v):
         return max(v[n-1] + brute_force(max_w-w[n-1], n-1, w, v), 
                   brute_force(max_w, n-1, w, v))
 
+# purpose: dynamic programming implementation of 0-1 Knapsack Problem
+# input: max_w = maximum weight of the prob_instance
+#        n - number of objects
+#        wt - list of weights
+#        v - list of values
+# return: solution
+def dynamic_programming(max_w, n, wt, v):
+    K = [[0 for x in range(max_w+1)] for y in range(n+1)]
+    
+    for i in range(n+1):
+        for w in range(max_w+1):
+            if  i == 0 or w == 0:
+                K[i][w] = 0
+            elif wt[i-1] <= w:
+                K[i][w] = max(v[i-1] + K[i-1][w-wt[i-1]], K[i-1][w])
+            else:
+                K[i][w] = K[i-1][w]
+
+    return K[n][max_w]
+    
+
 def main():
     if len(sys.argv) != 5:
         print "Please type: python asn2.py <start> <n> <step> <algorithm>"
@@ -125,7 +146,15 @@ def main():
                 print "greedy"
 
             elif choice == 'd':
-                print "dynamic programming"
+                one = generate_one_instance(start, i, step)
+                w = make_list(one, 1)
+                v = make_list(one, 2)
+                max_w = max_weight(one)
+
+                start_time = timeit.default_timer()
+                solution = dynamic_programming(max_w, i, w, v)
+                elapsed = int((timeit.default_timer() - start_time) * 1000)
+                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
 
             else:
                 print "Invalid algorithm choice!" 
