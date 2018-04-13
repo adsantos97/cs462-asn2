@@ -30,7 +30,7 @@ def generate_ints(start, n, step):
 
 # purpose: generate a random problem instance
 # input: start - starting integer
-#        n - numbre of objects
+#        n - number of objects
 #        step - increment between each integer
 # return: list of objects with their weights and values
 def generate_prob_instance(start, n, step):
@@ -41,6 +41,8 @@ def generate_prob_instance(start, n, step):
     weights = generate_rand_ints(n)
     values = generate_rand_ints(n)
 
+    print("Object\tWeight\tValue")
+
     start = timeit.default_timer()
 
     for i in range(n/step):
@@ -48,10 +50,10 @@ def generate_prob_instance(start, n, step):
         obj.append(weights[i])
         obj.append(values[i])
         prob_instance.append(obj)
-        print obj
+        print obj[0],"\t",obj[1],"\t",obj[2]
         obj = []
-    elapsed = timeit.default_timer() - start
-    print(elapsed)
+    elapsed = (timeit.default_timer() - start) * 1000
+    print "Time elapsed: ", elapsed
 
     # double check problem instance
     #for i, w, v in itertools.izip(objects, weights, values):
@@ -68,23 +70,62 @@ def max_weight(prob_instance):
         #for data in obj:
         max_weight += obj[1]
 
-    #print max_weight
+    print "Total Weight: ", max_weight
     max_weight = int(round(max_weight * 0.75)) # 75% and round
-    print max_weight
+    return max_weight
+
+def make_list(prob_instance, choice):
+    l = []
+    for obj in prob_instance:
+        l.append(obj[choice])
+    return l
+
+# purpose: brute force implementation of 0-1 Knapsack Problem
+# input:
+#
+#
+# return:
+def brute_force(prob_instance, max_w, n):
+    w = make_list(prob_instance, 1)
+    v = make_list(prob_instance, 2)
+
+    if n == 0 or max_w == 0:
+        return 0
+
+    if w[n-1] > max_w:
+        return brute_force(prob_instance, max_w, n-1)
+    else:
+        return max(v[n-1] + brute_force(prob_instance, max_w-w[n-1], n-1), 
+                  brute_force(prob_instance, max_w, n-1))
 
 def main():
-    if len(sys.argv) != 4:
-        print "Please type: python asn2.py <start> <n> <step>"
+    if len(sys.argv) != 5:
+        print "Please type: python asn2.py <start> <n> <step> <algorithm>"
+        print "Choices of algorithm: brute -> {}, greedy -> {}, dynamic" \
+              "programming -> {}".format('b','g','d')
     else:
         start = int(sys.argv[1])
         n = int(sys.argv[2])
         step = int(sys.argv[3])
-        print 'Params=', start, n, step
+        choice = sys.argv[4]
+        print "Start = {} | n = {} | Step = {}".format(start, n, step)
 
-        print("Generating random numbers")
-        list_ints = generate_ints(start, n, step)
-        print(list_ints)
         problem = generate_prob_instance(start, n, step)
-        max_weight(problem)
+        max_w = max_weight(problem)
+        print "Maximum Weight of Knapsack: ", max_w
+        
+        if choice == 'b':
+            print "brute"
+        elif choice == 'g':
+            print "greedy"
+        elif choice == 'd':
+            print "dynamic programming"
+        else:
+            print "Invalid algorithm choice!" 
+
+        #start = timeit.default_timer()
+        #print "Solution: ", knapsack(problem, max_w, n)
+        #elapsed = (timeit.default_timer() - start) * 1000
+        #print "Time elapsed (in milliseconds): ", elapsed
 
 main()
