@@ -41,21 +41,16 @@ def generate_prob_instance(start, n, step):
         prob_instance.append(obj)
         print obj
         obj = []
-    print prob_instance
+    return prob_instance
 
-def check_prob_instance(start, n, step):
-    objects = generate_ints(start, n, step)
-    weights = generate_rand_ints(n)
-    values = generate_rand_ints(n)
-    obj = []
-    for i, w, v in itertools.izip(objects, weights, values):
-        print("Object {}: {} {}".format(i, w, v))
+    # double check problem instance
+    #for i, w, v in itertools.izip(objects, weights, values):
+        #print("Object {}: {} {}".format(i, w, v))
 
 def main():
     print("Generating random numbers")
     list_ints = generate_ints(25, 100, 25)
     print(list_ints)
     generate_prob_instance(25, 100, 25)
-    check_prob_instance(25, 100, 25)
 
 main()
