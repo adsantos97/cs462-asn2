@@ -4,6 +4,8 @@ _author_ = 'arizza santos'
 # Assignment 2: Dynamic Programming and Greedy Algorithms
 
 import random
+#import time
+import timeit
 import itertools
 
 # purpose: generate random integers
@@ -38,7 +40,8 @@ def generate_prob_instance(start, n, step):
     objects = generate_ints(start, n, step)
     weights = generate_rand_ints(n)
     values = generate_rand_ints(n)
-
+    start = timeit.default_timer()
+    #start = time.time()
     for i in range(n/step):
         obj.append(objects[i])
         obj.append(weights[i])
@@ -46,6 +49,9 @@ def generate_prob_instance(start, n, step):
         prob_instance.append(obj)
         print obj
         obj = []
+    elapsed = timeit.default_timer() - start
+    #end = time.time()
+    print(elapsed)
 
     # double check problem instance
     #for i, w, v in itertools.izip(objects, weights, values):
@@ -63,7 +69,7 @@ def max_weight(prob_instance):
         max_weight += obj[1]
 
     #print max_weight
-    max_weight = int(round(max_weight * 0.75))
+    max_weight = int(round(max_weight * 0.75)) # 75% and round
     print max_weight
 
 def main():
