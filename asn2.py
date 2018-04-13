@@ -80,22 +80,20 @@ def make_list(prob_instance, choice):
     return l
 
 # purpose: brute force implementation of 0-1 Knapsack Problem
-# input: prob_instance - list of objects with their weights and values
-#        max_w - maximum weight of the prob_instance
+# input: max_w - maximum weight of the prob_instance
 #        n - number of objects
-# return:
-def brute_force(prob_instance, max_w, n):
-    w = make_list(prob_instance, 1)
-    v = make_list(prob_instance, 2)
-
+#        w - list of weights
+#        v - list of values
+# return: solution
+def brute_force(max_w, n, w, v):
     if n == 0 or max_w == 0:
         return 0
 
     if w[n-1] > max_w:
-        return brute_force(prob_instance, max_w, n-1)
+        return brute_force(max_w, n-1, w, v)
     else:
-        return max(v[n-1] + brute_force(prob_instance, max_w-w[n-1], n-1), 
-                  brute_force(prob_instance, max_w, n-1))
+        return max(v[n-1] + brute_force(max_w-w[n-1], n-1, w, v), 
+                  brute_force(max_w, n-1, w, v))
 
 def main():
     if len(sys.argv) != 5:
@@ -114,10 +112,12 @@ def main():
 
             if choice == 'b':
                 one = generate_one_instance(start, i, step)
+                w = make_list(one, 1)
+                v = make_list(one, 2)
                 max_w = max_weight(one)
                 
                 start_time = timeit.default_timer()
-                solution = brute_force(one, max_w, i)
+                solution = brute_force(max_w, i, w, v)
                 elapsed = int((timeit.default_timer() - start_time) * 1000)
                 print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
 
@@ -129,10 +129,5 @@ def main():
 
             else:
                 print "Invalid algorithm choice!" 
-
-        #start = timeit.default_timer()
-        #print "Solution: ", knapsack(problem, max_w, n)
-        #elapsed = (timeit.default_timer() - start) * 1000
-        #print "Time elapsed (in milliseconds): ", elapsed
 
 main()
