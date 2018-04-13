@@ -23,8 +23,8 @@ def knapSack(W , wt , val , n):
 # end of function knapSack
  
 # To test above function
-val = [8,4,10,10,3,2,1,10,2,6]
-wt = [1,2,7,10,8,3,6,8,9,10]
-W = 47
+val = [3,2,2,4]
+wt = [3,2,3,2]
+W = 8
 n = len(val)
 print knapSack(W , wt , val , n)

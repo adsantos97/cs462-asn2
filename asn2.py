@@ -38,6 +38,7 @@ def generate_one_instance(start, n, step):
     obj = []
 
     objects = generate_ints(start, n, step)
+    print "Objects: ", objects
     weights = generate_rand_ints(n)
     values = generate_rand_ints(n)
 
@@ -48,6 +49,7 @@ def generate_one_instance(start, n, step):
         obj.append(weights[i])
         obj.append(values[i])
         prob_instance.append(obj)
+        print obj
         #print obj[0],"\t",obj[1],"\t",obj[2]
         obj = []
 
@@ -102,8 +104,9 @@ def brute_force(max_w, n, w, v):
 #        v - list of values
 # return: solution
 def dynamic_programming(max_w, n, wt, v):
-    K = [[0 for x in range(max_w+1)] for y in range(n+1)]
-    
+    #K = [[0 for x in range(max_w+1)] for y in range(n+1)]
+    print "hi"
+'''
     for i in range(n+1):
         for w in range(max_w+1):
             if  i == 0 or w == 0:
@@ -114,6 +117,7 @@ def dynamic_programming(max_w, n, wt, v):
                 K[i][w] = K[i-1][w]
 
     return K[n][max_w]
+'''
     
 
 def main():
@@ -146,6 +150,7 @@ def main():
                 print "greedy"
 
             elif choice == 'd':
+                print "n: ", i
                 one = generate_one_instance(start, i, step)
                 w = make_list(one, 1)
                 v = make_list(one, 2)
@@ -157,6 +162,8 @@ def main():
                 print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
 
             else:
-                print "Invalid algorithm choice!" 
+                print "Invalid algorithm choice!"
+                print "I: ", i
+                print generate_one_instance(start, i, step) 
 
 main()
