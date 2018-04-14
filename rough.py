@@ -98,9 +98,9 @@ def main():
         elif choice == 'd':
             for i in range(start, n+1, step):
                 w = generate_rand_ints(i)
-                print w
+                #print w
                 v = generate_rand_ints(i)
-                print v
+                #print v
                 max_w = max_weight(w)
      
                 start_time = timeit.default_timer()

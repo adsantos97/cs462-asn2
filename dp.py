@@ -16,8 +16,8 @@ def knapSack(W, wt, val, n):
     return K[n][W]
  
 # Driver program to test above function
-val = [3,2,2]
-wt = [1,3,2]
-W = 5
+val = [2, 1, 6, 5, 3, 5]
+wt = [1, 1, 1, 5, 3, 5]
+W = 12
 n = len(val)
 print(knapSack(W, wt, val, n))
