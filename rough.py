@@ -24,7 +24,6 @@ def max_weight(weights):
     max_weight = 0    
 
     for x in weights:
-        print x
         max_weight += x
 
     #print "Total Weight: ", max_weight
@@ -47,24 +46,71 @@ def brute_force(max_w, n, w, v):
         return max(v[n-1] + brute_force(max_w-w[n-1], n-1, w, v), 
                   brute_force(max_w, n-1, w, v))
 
+# purpose: dynamic programming implementation of 0-1 Knapsack Problem
+# input: max_w = maximum weight of the prob_instance
+#        n - number of objects
+#        wt - list of weights
+#        v - list of values
+# return: solution
+def dynamic_programming(max_w, n, wt, v):
+    K = [[0 for x in range(max_w+1)] for y in range(n+1)]
+
+    for i in range(n+1):
+        for w in range(max_w+1):
+            if  i == 0 or w == 0:
+                K[i][w] = 0
+            elif wt[i-1] <= w:
+                K[i][w] = max(v[i-1] + K[i-1][w-wt[i-1]], K[i-1][w])
+            else:
+                K[i][w] = K[i-1][w]
+
+    return K[n][max_w]
+
 def main():
-	if len(sys.argv) != 2:
+	if len(sys.argv) != 5:
 		    print "Please type: python asn2.py <start> <n> <step> <algorithm>"
 		    print "Choices of algorithm: {} - brute force, {} - greedy, " \
 		          "{} - dynamic programming".format('b','g','d')
 	else:
-	    #start = int(sys.argv[1])
-	    n = int(sys.argv[1])
-	    #step = int(sys.argv[3])
-	    #choice = sys.argv[4]
-	    #print "Start = {} | n = {} | Step = {}\n".format(start, n, step)
-	    w = generate_rand_ints(n)
-	    v = generate_rand_ints(n)
-	    max_w = max_weight(w)
-            print "Weights: {}\nValues: {}".format(w,v)
-            print max_w
-	    print brute_force(max_w, n, w, v)
+	    start = int(sys.argv[1])
+	    n = int(sys.argv[2])
+	    step = int(sys.argv[3])
+	    choice = sys.argv[4]
+	    print "Start = {} | n = {} | Step = {}\n".format(start, n, step)
+        print "n\tMax Weight\tSolution\tTime(ms)"
 
+        if choice == 'b':
+            for i in range(start, n+1, step):
+                w = generate_rand_ints(i)
+                #print w
+                v = generate_rand_ints(i)
+                #print v
+                max_w = max_weight(w)
+     
+                start_time = timeit.default_timer()
+                solution = brute_force(max_w, i, w, v)
+                elapsed = int((timeit.default_timer() - start_time) * 1000)
+                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
+
+        elif choice == 'g':
+            print "greedy"
+
+        elif choice == 'd':
+            for i in range(start, n+1, step):
+                w = generate_rand_ints(i)
+                print w
+                v = generate_rand_ints(i)
+                print v
+                max_w = max_weight(w)
+     
+                start_time = timeit.default_timer()
+                solution = dynamic_programming(max_w, i, w, v)
+                elapsed = int((timeit.default_timer() - start_time) * 1000)
+                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
+
+        else:
+            print "Invalid algorithm choice!"
+             
 main()
         
 

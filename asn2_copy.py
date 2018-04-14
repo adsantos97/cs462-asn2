@@ -1,0 +1,131 @@
+_author_ = 'arizza santos'
+# Course: CS 462
+# April 18, 2018
+# Assignment 2: Dynamic Programming and Greedy Algorithms
+
+import random
+import timeit
+import itertools
+import sys
+
+# purpose: generate list of integers [start,n]
+# input: start - starting integer
+#        n - number of objects(integers)
+#        step - increment between each integer
+# return: ints - list of integers
+def generate_ints(start, n, step):
+    ints = []
+    for i in range(start, n+1, step):
+        ints.append(i)
+    return ints
+
+# purpose: generate one random problem instance
+# input: start - starting integer
+#        n - number of objects
+#        step - increment between each integer
+# return: list of objects with their weights and values
+def generate_one_instance(start, n, step):
+    prob_instance = []
+    obj = []
+
+    objects = generate_ints(start, n, step)
+    print "Objects: ", objects
+    weights = generate_rand_ints(n)
+    values = generate_rand_ints(n)
+
+    #print("Object\tWeight\tValue")
+
+    for i in range(n/step):
+        obj.append(objects[i])
+        obj.append(weights[i])
+        obj.append(values[i])
+        prob_instance.append(obj)
+        print obj
+        #print obj[0],"\t",obj[1],"\t",obj[2]
+        obj = []
+
+    # double check problem instance
+    #for i, w, v in itertools.izip(objects, weights, values):
+        #print("Object {}: {} {}".format(i, w, v))
+    return prob_instance
+
+# purpose: make a list from a given problem instance
+# input: prob_instance - list of objects with their weights and values
+#        choice: 0 - objects, 1 - weights, 2 - values
+# return: a list made from the given choice
+def make_list(prob_instance, choice):
+    l = []
+    for obj in prob_instance:
+        l.append(obj[choice])
+    return l
+
+# purpose: dynamic programming implementation of 0-1 Knapsack Problem
+# input: max_w = maximum weight of the prob_instance
+#        n - number of objects
+#        wt - list of weights
+#        v - list of values
+# return: solution
+def dynamic_programming(max_w, n, wt, v):
+    #K = [[0 for x in range(max_w+1)] for y in range(n+1)]
+    print "hi"
+'''
+    for i in range(n+1):
+        for w in range(max_w+1):
+            if  i == 0 or w == 0:
+                K[i][w] = 0
+            elif wt[i-1] <= w:
+                K[i][w] = max(v[i-1] + K[i-1][w-wt[i-1]], K[i-1][w])
+            else:
+                K[i][w] = K[i-1][w]
+
+    return K[n][max_w]
+'''
+    
+
+def main():
+    if len(sys.argv) != 5:
+        print "Please type: python asn2.py <start> <n> <step> <algorithm>"
+        print "Choices of algorithm: {} - brute force, {} - greedy, " \
+              "{} - dynamic programming".format('b','g','d')
+    else:
+        start = int(sys.argv[1])
+        n = int(sys.argv[2])
+        step = int(sys.argv[3])
+        choice = sys.argv[4]
+        print "Start = {} | n = {} | Step = {}\n".format(start, n, step)
+
+        print "n\tMax Weight\tSolution\tTime(ms)"
+        for i in range(start, n+1, step):
+
+            if choice == 'b':
+                one = generate_one_instance(start, i, step)
+                w = make_list(one, 1)
+                v = make_list(one, 2)
+                max_w = max_weight(one)
+                
+                start_time = timeit.default_timer()
+                solution = brute_force(max_w, i, w, v)
+                elapsed = int((timeit.default_timer() - start_time) * 1000)
+                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
+
+            elif choice == 'g':
+                print "greedy"
+
+            elif choice == 'd':
+                print "n: ", i
+                one = generate_one_instance(start, i, step)
+                w = make_list(one, 1)
+                v = make_list(one, 2)
+                max_w = max_weight(one)
+
+                start_time = timeit.default_timer()
+                solution = dynamic_programming(max_w, i, w, v)
+                elapsed = int((timeit.default_timer() - start_time) * 1000)
+                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
+
+            else:
+                print "Invalid algorithm choice!"
+                print "I: ", i
+                print generate_one_instance(start, i, step) 
+
+main()
