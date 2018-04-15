@@ -75,8 +75,7 @@ def vw_compare(obj):
 # purpose: greedy implementation of 0-1 Knapsack Problem
 # input: max_w - maximum weight of the prob_instance
 #        n - number of objects
-#        w - list of weights
-#        v - list of values
+#        vw - objects with values and weights
 # return: solution
 def greedy(max_w, n, vw):
     current_w = 0
@@ -159,6 +158,8 @@ def main():
                 elapsed = int((timeit.default_timer() - start_time) * 1000)
 
                 ratio = float(g_solution)/solution
+                #print ratio
+                #r = float("{0:.2f}".format(ratio)
                 print "{}\t{}\t\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed, ratio)
 
         else:
