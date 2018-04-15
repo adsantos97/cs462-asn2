@@ -66,8 +66,11 @@ def dynamic_programming(max_w, n, wt, v):
 
     return K[n][max_w]
 
-#def compare(v, w):
-   
+# purpose: comparison function to sort object to v/w ratio
+# input: obj - individual object
+# return: v/w ratio
+def vw_compare(obj):
+    return float(obj[0])/obj[1]
 
 # purpose: greedy implementation of 0-1 Knapsack Problem
 # input: max_w - maximum weight of the prob_instance
@@ -75,14 +78,18 @@ def dynamic_programming(max_w, n, wt, v):
 #        w - list of weights
 #        v - list of values
 # return: solution
-def greedy(max_w, n, w, v):
-    val_densities = []
-    sorted_vd = []
-    for i in range(n):
-         print "v: ", v[i]
-         print "w: ", w[i]
-         val_densities.append(float(v[i])/w[i])
-         print val_densities[i] 
+def greedy(max_w, n, vw):
+    current_w = 0
+    solution = 0
+    #print "vw: ", vw
+    val_densities = sorted(vw, key=vw_compare, reverse=True)
+    #print "val: ",val_densities
+    for i in range(len(val_densities)):
+         #print "object: ", val_densities[i]
+         if current_w + val_densities[i][1] <= max_w:
+             current_w += val_densities[i][1]
+             solution += val_densities[i][0]
+    return solution                     
 
 # purpose: make a list of values and weights
 # input: v - list of values
@@ -106,9 +113,9 @@ def main():
         step = int(sys.argv[3])
         choice = sys.argv[4]
         print "Start = {} | n = {} | Step = {}\n".format(start, n, step)
-        print "n\tMax Weight\tSolution\tTime(ms)"
 
         if choice == 'b':
+            print "n\tMax Weight\tSolution\tTime(ms)"
             for i in range(start, n+1, step):
                 v = generate_rand_ints(i)
                 #print v
@@ -122,30 +129,37 @@ def main():
                 print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
 
         elif choice == 'g':
-            #for i in range(start, n+1, step):
-                v = generate_rand_ints(n)
-                print v
-                w = generate_rand_ints(n)
-                print w
-                max_w = max_weight(w)
-
-                vm = vals_wts(v, w)
-     
-                #start_time = timeit.default_timer()
-                greedy(max_w, n, w, v)
-
-        elif choice == 'd':
+            print "n\tMax Weight\tSolution\tTime(ms)"
             for i in range(start, n+1, step):
                 v = generate_rand_ints(i)
                 #print v
                 w = generate_rand_ints(i)
                 #print w
                 max_w = max_weight(w)
+                vw = vals_wts(v, w)
+     
+                start_time = timeit.default_timer()
+                solution = greedy(max_w, i, vw)
+                elapsed = int((timeit.default_timer() - start_time) * 1000)
+                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
+
+        elif choice == 'd':
+            print "n\tMax Weight\tSolution\tTime(ms)\tRatio"
+            for i in range(start, n+1, step):
+                v = generate_rand_ints(i)
+                #print v
+                w = generate_rand_ints(i)
+                #print w
+                max_w = max_weight(w)
+                vw = vals_wts(v, w) # used for greedy solution
+                g_solution = greedy(max_w, i, vw)
      
                 start_time = timeit.default_timer()
                 solution = dynamic_programming(max_w, i, w, v)
                 elapsed = int((timeit.default_timer() - start_time) * 1000)
-                print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
+
+                ratio = float(g_solution)/solution
+                print "{}\t{}\t\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed, ratio)
 
         else:
             print "Invalid algorithm choice!"
