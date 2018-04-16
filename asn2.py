@@ -54,6 +54,8 @@ def brute_force(max_w, n, w, v):
 # return: solution
 def dynamic_programming(max_w, n, wt, v):
     K = [[0 for x in range(max_w+1)] for y in range(n+1)]
+    #print len(K)
+    #print "at entry: ", len(K[0])
 
     for i in range(n+1):
         for w in range(max_w+1):
@@ -85,9 +87,11 @@ def greedy(max_w, n, vw):
     #print "val: ",val_densities
     for i in range(len(val_densities)):
          #print "object: ", val_densities[i]
+         #print float(val_densities[i][0])/val_densities[i][1]
          if current_w + val_densities[i][1] <= max_w:
              current_w += val_densities[i][1]
              solution += val_densities[i][0]
+
     return solution                     
 
 # purpose: make a list of values and weights
@@ -128,7 +132,7 @@ def main():
                 print "{}\t{}\t\t{}\t\t{}".format(i, max_w, solution, elapsed)
 
         elif choice == 'g':
-            print "n\tMax Weight\tSolution\tTime(ms)"
+            print "n\tMax Weight\t\tSolution\t\tTime(ms)"
             for i in range(start, n+1, step):
                 v = generate_rand_ints(i)
                 #print v
@@ -151,8 +155,8 @@ def main():
                 #print w
                 max_w = max_weight(w)
                 vw = vals_wts(v, w) # used for greedy solution
+                
                 g_solution = greedy(max_w, i, vw)
-     
                 start_time = timeit.default_timer()
                 solution = dynamic_programming(max_w, i, w, v)
                 elapsed = int((timeit.default_timer() - start_time) * 1000)
