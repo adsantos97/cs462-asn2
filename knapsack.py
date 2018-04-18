@@ -4,7 +4,7 @@ _author_ = 'arizza santos'
 # Assignment 2: Dynamic Programming and Greedy Algorithms
 
 import random
-import timeit
+import timeit # used for wall clock time
 import itertools
 import sys
 
@@ -35,7 +35,7 @@ def max_weight(weights):
 #        n - number of objects
 #        w - list of weights
 #        v - list of values
-# return: solution
+# return: optimal (value) solution
 def brute_force(max_w, n, w, v):
     if n == 0 or max_w == 0:
         return 0
@@ -51,7 +51,7 @@ def brute_force(max_w, n, w, v):
 #        n - number of objects
 #        wt - list of weights
 #        v - list of values
-# return: solution
+# return: optimal (value) solution
 def dynamic_programming(max_w, n, wt, v):
     K = [[0 for x in range(max_w+1)] for y in range(n+1)]
     #print len(K)
@@ -72,7 +72,7 @@ def dynamic_programming(max_w, n, wt, v):
 # input: obj - individual object
 # return: v/w ratio
 def vw_compare(obj):
-    return float(obj[0])/obj[1]
+    return float(obj[0])/obj[1] # obj[0] is (v)alue, obj[1] is (w)eight
 
 # purpose: greedy implementation of 0-1 Knapsack Problem
 # input: max_w - maximum weight of the prob_instance
@@ -94,7 +94,7 @@ def greedy(max_w, n, vw):
 
     return solution                     
 
-# purpose: make a list of values and weights
+# purpose: make a list of value and weight pairs
 # input: v - list of values
 #        w - list of weights
 # return: val_weights - list of objects with values and weights
@@ -120,7 +120,8 @@ def main():
         if choice == 'b':
             print "n\tMax Weight\tSolution\tTime(ms)"
             for i in range(start, n+1, step):
-                v = generate_rand_ints(i)
+                # generate random problem instance using i
+                v = generate_rand_ints(i) 
                 #print v
                 w = generate_rand_ints(i)
                 #print w
@@ -134,6 +135,7 @@ def main():
         elif choice == 'g':
             print "n\tMax Weight\t\tSolution\t\tTime(ms)"
             for i in range(start, n+1, step):
+                # generate random problem instance using i 
                 v = generate_rand_ints(i)
                 #print v
                 w = generate_rand_ints(i)
@@ -149,6 +151,7 @@ def main():
         elif choice == 'd':
             print "n\tMax Weight\tSolution\tTime(ms)\tRatio"
             for i in range(start, n+1, step):
+                # generate random problem instance using i
                 v = generate_rand_ints(i)
                 #print v
                 w = generate_rand_ints(i)
